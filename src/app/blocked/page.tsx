@@ -3,6 +3,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { MessageSquare, Users, Phone, CircleDashed, MoreVertical, Search, Archive } from "lucide-react";
 
 const WhatsappIcon = () => (
   <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-10 h-10">
@@ -23,7 +24,7 @@ const ContactItem = () => (
     </div>
 );
 
-const MessageBubble = ({ content, time, isUser, isBlocked }: { content: string, time: string, isUser: boolean, isBlocked: boolean }) => (
+const MessageBubble = ({ content, time, isUser }: { content: string, time: string, isUser: boolean }) => (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
         <div className={`rounded-lg py-2 px-3 max-w-sm ${isUser ? 'bg-[#dcf8c6]' : 'bg-white'}`}>
             <p className="text-sm" style={{fontFamily: 'Helvetica Neue, sans-serif'}}>{content}</p>
@@ -41,10 +42,29 @@ export default function BlockedPage() {
 
                 {/* Sidebar */}
                 <div className="w-full md:w-1/3 bg-white border-r border-gray-200 flex flex-col">
-                    <header className="p-4 bg-gray-100 border-b">
-                         <h2 className="text-lg font-semibold">Conversas</h2>
+                    <header className="p-3 bg-gray-100 border-b flex items-center justify-between">
+                         <Avatar>
+                            <AvatarFallback className="bg-gray-400"></AvatarFallback>
+                        </Avatar>
+                        <div className="flex items-center gap-4 text-gray-600">
+                            <Users className="w-6 h-6 cursor-pointer hover:text-gray-800" />
+                            <CircleDashed className="w-6 h-6 cursor-pointer hover:text-gray-800" />
+                            <MessageSquare className="w-6 h-6 cursor-pointer hover:text-gray-800" />
+                            <Phone className="w-6 h-6 cursor-pointer hover:text-gray-800" />
+                            <MoreVertical className="w-6 h-6 cursor-pointer hover:text-gray-800" />
+                        </div>
                     </header>
+                    <div className="p-3 bg-gray-50 border-b">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input type="text" placeholder="Pesquisar ou começar uma nova conversa" className="w-full pl-10 pr-4 py-2 text-sm border rounded-lg bg-gray-200 focus:outline-none" />
+                        </div>
+                    </div>
                     <div className="flex-grow overflow-y-auto">
+                        <div className="flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b text-gray-700">
+                            <Archive className="w-5 h-5 mr-4" />
+                            <span>Arquivadas</span>
+                        </div>
                         {[...Array(5)].map((_, i) => <ContactItem key={i} />)}
                     </div>
                 </div>
@@ -66,10 +86,10 @@ export default function BlockedPage() {
                                 </Button>
                             </div>
                             
-                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:30 AM" isUser={false} isBlocked={true} />
-                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:32 AM" isUser={true} isBlocked={true} />
-                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:35 AM" isUser={false} isBlocked={true} />
-                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:36 AM" isUser={true} isBlocked={true} />
+                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:30 AM" isUser={false} />
+                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:32 AM" isUser={true} />
+                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:35 AM" isUser={false} />
+                            <MessageBubble content="Conteúdo Bloqueado 🔒" time="10:36 AM" isUser={true} />
                         </div>
                     </div>
                     
@@ -83,4 +103,3 @@ export default function BlockedPage() {
         </div>
     );
 }
-
