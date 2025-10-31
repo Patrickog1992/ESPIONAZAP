@@ -52,11 +52,11 @@ function AnalysisContent() {
 
     const progressInterval = setInterval(() => {
         setProgress(p => {
-            const newProgress = p + (100 / (videoButtonTime / 100));
-            if (newProgress >= 100) {
+            if (p >= 100) {
                 clearInterval(progressInterval);
                 return 100;
             }
+            const newProgress = p + (100 / (videoButtonTime / 100));
             return newProgress;
         })
     }, 100);
@@ -69,6 +69,7 @@ function AnalysisContent() {
 
   const handleAccessClick = () => {
     setIsRedirecting(true);
+    setProgress(0); // Reset progress for the redirect loading
   };
   
   useEffect(() => {
@@ -121,22 +122,25 @@ function AnalysisContent() {
                 ) : (
                     <div className="space-y-4">
                       <h2 className="text-2xl font-bold mb-4">{isRedirecting ? "Redirecionando para as conversas..." : "Analisando Relatórios..."}</h2>
-                      <div className="grid md:grid-cols-3 gap-6 mt-6">
-                          {resultCards.map((card, index) => (
-                             <Card key={index} className="text-center shadow-lg hover:shadow-primary/20 transition-shadow">
-                                 <CardContent className="p-6">
-                                     <card.icon className="w-10 h-10 mx-auto text-primary mb-3"/>
-                                     <p className="text-5xl font-extrabold text-foreground">{card.value}</p>
-                                     <p className="text-lg font-bold mt-2">{card.title}</p>
-                                     <p className="text-sm text-muted-foreground mt-1">{card.description}</p>
-                                 </CardContent>
-                             </Card>
-                          ))}
-                      </div>
-                      <Button size="lg" className={cn("h-16 text-xl font-bold w-full max-w-md mx-auto my-8", !isRedirecting && "animate-pulse-green")} onClick={handleAccessClick} disabled={isRedirecting}>
+                       <Button size="lg" className={cn("h-16 text-xl font-bold w-full max-w-md mx-auto my-8", !isRedirecting && "animate-pulse-green")} onClick={handleAccessClick} disabled={isRedirecting}>
                           {isRedirecting ? <Loader2 className="animate-spin" /> : "ACESSAR MENSAGENS"}
                       </Button>
                       {isRedirecting && <Progress value={progress} className="w-full max-w-md mx-auto mt-4" />}
+
+                      {!isRedirecting && (
+                        <div className="grid md:grid-cols-3 gap-6 mt-6">
+                            {resultCards.map((card, index) => (
+                               <Card key={index} className="text-center shadow-lg hover:shadow-primary/20 transition-shadow">
+                                   <CardContent className="p-6">
+                                       <card.icon className="w-10 h-10 mx-auto text-primary mb-3"/>
+                                       <p className="text-5xl font-extrabold text-foreground">{card.value}</p>
+                                       <p className="text-lg font-bold mt-2">{card.title}</p>
+                                       <p className="text-sm text-muted-foreground mt-1">{card.description}</p>
+                                   </CardContent>
+                               </Card>
+                            ))}
+                        </div>
+                      )}
                     </div>
                 )}
             </div>
