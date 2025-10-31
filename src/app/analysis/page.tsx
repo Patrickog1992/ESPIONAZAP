@@ -73,18 +73,17 @@ function AnalysisContent() {
   
   useEffect(() => {
     if (isRedirecting) {
-      const finalProgressInterval = setInterval(() => {
-        setProgress(p => {
-          if (p >= 100) {
-            clearInterval(finalProgressInterval);
-            router.push('/blocked');
-            return 100;
-          }
-          return Math.min(100, p + 5); 
-        });
-      }, 50);
+        let currentProgress = 0;
+        const interval = setInterval(() => {
+            currentProgress += 5;
+            setProgress(currentProgress);
+            if (currentProgress >= 100) {
+                clearInterval(interval);
+                router.push('/blocked');
+            }
+        }, 50);
 
-      return () => clearInterval(finalProgressInterval);
+        return () => clearInterval(interval);
     }
   }, [isRedirecting, router]);
 
