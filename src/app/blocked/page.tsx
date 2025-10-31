@@ -1,14 +1,21 @@
 
 "use client";
 
+import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Users, Phone, CircleDashed, MoreVertical, Search, Archive, Video, PhoneCall } from "lucide-react";
 
-const ContactItem = ({ unreadCount, time }: { unreadCount?: number; time?: string }) => (
+const ContactItem = ({ unreadCount, time, seed }: { unreadCount?: number; time?: string, seed: number }) => (
     <div className="flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b">
         <Avatar className="h-12 w-12 bg-gray-300">
-            <AvatarFallback className="bg-gray-300"></AvatarFallback>
+           <Image 
+                src={`https://picsum.photos/seed/${seed}/48/48`}
+                alt="Foto de perfil borrada"
+                width={48}
+                height={48}
+                className="rounded-full filter blur-sm"
+            />
         </Avatar>
         <div className="ml-4 flex-grow">
             <p className="font-semibold text-gray-800">Bloqueado 🔒</p>
@@ -37,13 +44,13 @@ const MessageBubble = ({ content, time, isUser }: { content: string, time: strin
 export default function BlockedPage() {
     
     const contacts = [
-        { unreadCount: 2, time: '10:49' },
-        { unreadCount: 5, time: '10:45' },
-        {},
-        { unreadCount: 1, time: 'Ontem' },
-        {},
-        {},
-        {},
+        { unreadCount: 2, time: '10:49', seed: 1 },
+        { unreadCount: 5, time: '10:45', seed: 2 },
+        { seed: 3 },
+        { unreadCount: 1, time: 'Ontem', seed: 4 },
+        { seed: 5 },
+        { seed: 6 },
+        { seed: 7 },
     ];
 
     return (
@@ -55,7 +62,13 @@ export default function BlockedPage() {
                 <div className="w-full md:w-[30%] lg:w-1/3 bg-white border-r border-gray-200 flex flex-col">
                     <header className="p-3 bg-[#f0f2f5] border-b flex items-center justify-between">
                          <Avatar className="h-10 w-10 bg-gray-300">
-                            <AvatarFallback className="bg-gray-300" />
+                             <Image 
+                                src="https://picsum.photos/seed/user/40/40"
+                                alt="Foto de perfil borrada"
+                                width={40}
+                                height={40}
+                                className="rounded-full filter blur-sm"
+                            />
                          </Avatar>
                         <div className="flex items-center gap-4 text-gray-500">
                             <Users size={22} className="cursor-pointer hover:text-gray-700" />
@@ -78,7 +91,7 @@ export default function BlockedPage() {
                         {contacts.map((contact, i) => <ContactItem key={i} {...contact} />)}
                     </div>
                     <nav className="bg-[#f0f2f5] p-2 flex justify-around border-t">
-                        <button className="flex flex-col items-center text-gray-600 hover:text-primary w-full py-1 rounded-md">
+                        <button className="flex flex-col items-center text-primary w-full py-1 rounded-md">
                            <MessageSquare size={24} />
                            <span className="text-xs mt-1">Conversas</span>
                         </button>
@@ -98,12 +111,17 @@ export default function BlockedPage() {
                 </div>
 
                 {/* Chat Area */}
-                <div className="w-full md:w-[70%] lg:w-2/3 bg-[#efeae2] flex flex-col relative bg-cover bg-center">
-                     <div className="absolute inset-0 bg-black/10"></div>
+                <div className="w-full md:w-[70%] lg:w-2/3 bg-[#efeae2] flex flex-col relative">
                     <header className="p-3 bg-[#f0f2f5] flex items-center justify-between border-b border-gray-300 z-10">
                       <div className="flex items-center gap-3">
                          <Avatar className="h-10 w-10 bg-gray-300">
-                           <AvatarFallback className="bg-gray-300" />
+                           <Image 
+                                src="https://picsum.photos/seed/1/40/40"
+                                alt="Foto de perfil borrada"
+                                width={40}
+                                height={40}
+                                className="rounded-full filter blur-sm"
+                            />
                          </Avatar>
                          <div>
                             <h2 className="font-semibold text-gray-700">Bloqueado 🔒</h2>
@@ -143,4 +161,3 @@ export default function BlockedPage() {
             </div>
         </div>
     );
-}
