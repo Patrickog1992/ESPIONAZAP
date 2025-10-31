@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,7 +20,6 @@ function VturbPlayer() {
     document.head.appendChild(script);
 
     return () => {
-      // Find the script and remove it on component unmount
       const loadedScript = document.querySelector(`script[src="${script.src}"]`);
       if (loadedScript) {
         document.head.removeChild(loadedScript);
@@ -34,21 +33,21 @@ function VturbPlayer() {
 
 function AnalysisContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const phone = searchParams.get("phone") || "Número não informado";
 
   const [showAccessButton, setShowAccessButton] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showResults, setShowResults] = useState(false);
 
   const loadingGif = placeholderImages.find(p => p.id === "loading-gif");
   const sslImage = placeholderImages.find(p => p.id === "ssl-image-2");
   
-  // 4 minutes and 13 seconds
   const videoButtonTime = (4 * 60 + 13) * 1000;
 
   useEffect(() => {
     const buttonTimer = setTimeout(() => {
       setShowAccessButton(true);
-      setProgress(100);
     }, videoButtonTime);
 
     const progressInterval = setInterval(() => {
@@ -67,6 +66,20 @@ function AnalysisContent() {
       clearInterval(progressInterval);
     };
   }, [videoButtonTime]);
+
+  const handleAccessClick = () => {
+    setShowResults(true);
+    const finalProgressInterval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(finalProgressInterval);
+          router.push('/blocked');
+          return 100;
+        }
+        return p + 2;
+      });
+    }, 50);
+  };
   
   const resultCards = [
     { value: 21, title: 'Mensagens suspeitas', description: '*Mensagens contendo algum contexto sexual.', icon: MessageCircleWarning },
@@ -90,14 +103,14 @@ function AnalysisContent() {
                 <VturbPlayer />
             </div>
 
-            {showAccessButton && (
-                 <Button size="lg" className={cn("h-16 text-xl font-bold w-full max-w-md mx-auto my-8 animate-pulse-green")}>
+            {showAccessButton && !showResults && (
+                 <Button size="lg" className={cn("h-16 text-xl font-bold w-full max-w-md mx-auto my-8 animate-pulse-green")} onClick={handleAccessClick}>
                     ACESSAR MENSAGENS
                 </Button>
             )}
 
             <div className="mt-8 transition-all duration-500">
-                {!showAccessButton ? (
+                {!showResults ? (
                     <div className="space-y-4">
                         {loadingGif && <Image src={loadingGif.imageUrl} alt={loadingGif.description} width={80} height={80} unoptimized className="mx-auto" />}
                         <p className="text-xl font-bold text-primary">{phone}</p>
@@ -106,17 +119,22 @@ function AnalysisContent() {
                         <p className="font-semibold text-muted-foreground animate-pulse">AGUARDE... O Whatsapp informado está sendo espionado</p>
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {resultCards.map((card, index) => (
-                           <Card key={index} className="text-center shadow-lg hover:shadow-primary/20 transition-shadow">
-                               <CardContent className="p-6">
-                                   <card.icon className="w-10 h-10 mx-auto text-primary mb-3"/>
-                                   <p className="text-5xl font-extrabold text-foreground">{card.value}</p>
-                                   <p className="text-lg font-bold mt-2">{card.title}</p>
-                                   <p className="text-sm text-muted-foreground mt-1">{card.description}</p>
-                               </CardContent>
-                           </Card>
-                        ))}
+                    <div className="space-y-4">
+                      <h2 className="text-2xl font-bold">Analisando Relatórios...</h2>
+                      <Progress value={progress} className="w-full max-w-md mx-auto" />
+                      <div className="grid md:grid-cols-3 gap-6 mt-6">
+                          {resultCards.map((card, index) => (
+                             <Card key={index} className="text-center shadow-lg hover:shadow-primary/20 transition-shadow">
+                                 <CardContent className="p-6">
+                                     <card.icon className="w-10 h-10 mx-auto text-primary mb-3"/>
+                                     <p className="text-5xl font-extrabold text-foreground">{card.value}</p>
+                                     <p className="text-lg font-bold mt-2">{card.title}</p>
+                                     <p className="text-sm text-muted-foreground mt-1">{card.description}</p>
+                                 </CardContent>
+                             </Card>
+                          ))}
+                      </div>
+                      <p className="font-semibold text-muted-foreground animate-pulse mt-4">Redirecionando para as conversas...</p>
                     </div>
                 )}
             </div>
