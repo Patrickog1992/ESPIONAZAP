@@ -73,7 +73,6 @@ function AnalysisContent() {
       setProgress(p => {
         if (p >= 100) {
           clearInterval(finalProgressInterval);
-          router.push('/blocked');
           return 100;
         }
         return p + 2;
@@ -81,6 +80,12 @@ function AnalysisContent() {
     }, 50);
   };
   
+  useEffect(() => {
+    if (progress >= 100 && showResults) {
+      router.push('/blocked');
+    }
+  }, [progress, showResults, router]);
+
   const resultCards = [
     { value: 21, title: 'Mensagens suspeitas', description: '*Mensagens contendo algum contexto sexual.', icon: MessageCircleWarning },
     { value: 7, title: 'Imagens suspeitas', description: '*Imagens identificadas com conteúdos de nudes.', icon: FileImage },
