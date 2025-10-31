@@ -36,9 +36,9 @@ function AnalysisContent() {
   const router = useRouter();
   const phone = searchParams.get("phone") || "Número não informado";
 
-  const [showAccessButton, setShowAccessButton] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [showResults, setShowResults] = useState(false);
 
   const loadingGif = placeholderImages.find(p => p.id === "loading-gif");
   const sslImage = placeholderImages.find(p => p.id === "ssl-image-2");
@@ -47,7 +47,7 @@ function AnalysisContent() {
 
   useEffect(() => {
     const buttonTimer = setTimeout(() => {
-      setShowAccessButton(true);
+      setShowContent(true);
     }, videoButtonTime);
 
     const progressInterval = setInterval(() => {
@@ -68,23 +68,25 @@ function AnalysisContent() {
   }, [videoButtonTime]);
 
   const handleAccessClick = () => {
-    setShowResults(true);
-    const finalProgressInterval = setInterval(() => {
-      setProgress(p => {
-        if (p >= 100) {
-          clearInterval(finalProgressInterval);
-          return 100;
-        }
-        return p + 2;
-      });
-    }, 50);
+    setIsRedirecting(true);
   };
   
   useEffect(() => {
-    if (progress >= 100 && showResults) {
-      router.push('/blocked');
+    if (isRedirecting) {
+      const finalProgressInterval = setInterval(() => {
+        setProgress(p => {
+          if (p >= 100) {
+            clearInterval(finalProgressInterval);
+            router.push('/blocked');
+            return 100;
+          }
+          return Math.min(100, p + 5); 
+        });
+      }, 50);
+
+      return () => clearInterval(finalProgressInterval);
     }
-  }, [progress, showResults, router]);
+  }, [isRedirecting, router]);
 
   const resultCards = [
     { value: 21, title: 'Mensagens suspeitas', description: '*Mensagens contendo algum contexto sexual.', icon: MessageCircleWarning },
@@ -107,15 +109,9 @@ function AnalysisContent() {
             <div className="my-8 shadow-2xl rounded-lg overflow-hidden bg-black">
                 <VturbPlayer />
             </div>
-
-            {showAccessButton && !showResults && (
-                 <Button size="lg" className={cn("h-16 text-xl font-bold w-full max-w-md mx-auto my-8 animate-pulse-green")} onClick={handleAccessClick}>
-                    ACESSAR MENSAGENS
-                </Button>
-            )}
-
+            
             <div className="mt-8 transition-all duration-500">
-                {!showResults ? (
+                {!showContent ? (
                     <div className="space-y-4">
                         {loadingGif && <Image src={loadingGif.imageUrl} alt={loadingGif.description} width={80} height={80} unoptimized className="mx-auto" />}
                         <p className="text-xl font-bold text-primary">{phone}</p>
@@ -125,8 +121,7 @@ function AnalysisContent() {
                     </div>
                 ) : (
                     <div className="space-y-4">
-                      <h2 className="text-2xl font-bold">Analisando Relatórios...</h2>
-                      <Progress value={progress} className="w-full max-w-md mx-auto" />
+                      <h2 className="text-2xl font-bold mb-4">{isRedirecting ? "Redirecionando para as conversas..." : "Analisando Relatórios..."}</h2>
                       <div className="grid md:grid-cols-3 gap-6 mt-6">
                           {resultCards.map((card, index) => (
                              <Card key={index} className="text-center shadow-lg hover:shadow-primary/20 transition-shadow">
@@ -139,7 +134,10 @@ function AnalysisContent() {
                              </Card>
                           ))}
                       </div>
-                      <p className="font-semibold text-muted-foreground animate-pulse mt-4">Redirecionando para as conversas...</p>
+                      <Button size="lg" className={cn("h-16 text-xl font-bold w-full max-w-md mx-auto my-8", !isRedirecting && "animate-pulse-green")} onClick={handleAccessClick} disabled={isRedirecting}>
+                          {isRedirecting ? <Loader2 className="animate-spin" /> : "ACESSAR MENSAGENS"}
+                      </Button>
+                      {isRedirecting && <Progress value={progress} className="w-full max-w-md mx-auto mt-4" />}
                     </div>
                 )}
             </div>
