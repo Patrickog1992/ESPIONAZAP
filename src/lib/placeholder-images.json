@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "main-promo-image",
+      "description": "Promotional image showing WhatsApp on a phone",
+      "imageUrl": "https://i.imgur.com/4sYFybQ.png",
+      "imageHint": "whatsapp phone"
+    },
+    {
+      "id": "feature-image-1",
+      "description": "Image showing app features",
+      "imageUrl": "https://descubrasegredos.lat/new/assets/img2.webp",
+      "imageHint": "app features"
+    },
+    {
+      "id": "ssl-image-1",
+      "description": "SSL Secure seal",
+      "imageUrl": "https://descubrasegredos.lat/new/assets/ssl-secure-3.webp",
+      "imageHint": "security seal"
+    },
+    {
+      "id": "loading-gif",
+      "description": "Animated loading indicator",
+      "imageUrl": "https://descubrasegredos.lat/new/assets/loading.gif",
+      "imageHint": "loading animation"
+    },
+    {
+      "id": "ssl-image-2",
+      "description": "Another SSL Secure seal for the analysis page",
+      "imageUrl": "https://descubrasegredos.lat/new/assets/ssl-secure-3-1.webp",
+      "imageHint": "security seal"
+    }
+  ]
 }
