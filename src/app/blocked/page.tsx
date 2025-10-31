@@ -146,9 +146,11 @@ export default function BlockedPage() {
                     
                     <div className="absolute top-16 left-1/2 -translate-x-1/2 z-20 w-full px-4">
                        <div className="text-center my-4 w-full">
-                            <Button className="bg-[#25D366] hover:bg-[#20b856] text-white font-bold py-4 px-8 rounded-full text-lg h-auto shadow-lg animate-pulse-green">
-                                Liberar acesso completo R$ 27,90
-                            </Button>
+                            <a href="https://pay.kirvano.com/42448069-81fd-45dd-a3f5-961139087a79" target="_blank" rel="noopener noreferrer">
+                                <Button className="bg-[#25D366] hover:bg-[#20b856] text-white font-bold py-4 px-8 rounded-full text-lg h-auto shadow-lg animate-pulse-green">
+                                    Liberar acesso completo R$ 27,90
+                                </Button>
+                            </a>
                         </div>
                     </div>
                     
@@ -161,3 +163,4 @@ export default function BlockedPage() {
             </div>
         </div>
     );
+}
