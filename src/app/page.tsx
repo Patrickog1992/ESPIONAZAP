@@ -21,7 +21,7 @@ interface Step {
 
 const initialSteps: Omit<Step, "status">[] = [
   { text: "Conectando ao servidor do WhatsApp...", icon: Server },
-  { text: "Simulando IP na região de Campo Belo...", icon: Wifi },
+  { text: "Simulando IP na sua região.", icon: Wifi },
   { text: "Ignorando o firewall...", icon: ShieldCheck },
   { text: "Injetando consultas SQL...", icon: Smartphone },
   { text: "Buscando informações de {phone}...", icon: Smartphone },
